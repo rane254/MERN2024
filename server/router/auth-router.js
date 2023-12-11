@@ -25,7 +25,7 @@ router.route("/about").get(authControllers.about);
 router.route("/contact").get(authControllers.contact);
 
 // Register route
-router.route("/register").get(authControllers.register);
+router.route("/register").post(authControllers.register);
 
 // Login route
 router.route("/login").get(authControllers.login);

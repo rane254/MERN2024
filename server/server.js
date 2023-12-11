@@ -1,3 +1,6 @@
+// Load environment variables from a configuration file
+require('dotenv').config();
+
 // Import the express module
 const express = require('express');
 
@@ -7,13 +10,21 @@ const app = express();
 // Import the router from the './router/auth-router' file
 const router = require('./router/auth-router');
 
+// Import the connectDB function from './utils/db'
+const connectDB = require('./utils/db');
+
+// Enable parsing of JSON data in requests
+app.use(express.json());
+
 // Use the router for paths starting with "/api/auth"
 app.use("/api/auth", router);
 
-// Set up a listener for incoming requests on the specified PORT
-const PORT = 5000;
-app.listen(PORT, () => {
-    // Log a message to indicate that the server is running
-    console.log("Server is running at PORT:", PORT);
+// Connect to the database using the connectDB function
+connectDB().then(() => {
+    // Set up a listener for incoming requests on the specified PORT
+    const PORT = process.env.PORT;
+    app.listen(PORT, () => {
+        // Log a message to indicate that the server is running
+        console.log(`Server is running at PORT: ${PORT}`);
+    });
 });
-
