@@ -66,7 +66,7 @@ const register = async (req, res) => {
         const userRegistered = await User.create({ username, email, phone, password });
 
         //In most cases, converting _id to a string is a good practice because it ensures Consistency and Compatibility across different JWT libraries and systems. It also aligns with the expectation that claims in a JWT are represented in strings.
-        res.status(201).json({ message: "User Registration Successfully.", token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
+        res.status(201).json({ message: `${ userExists.username } Registration Successfully.`, token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
         console.log({ userRegistered });
 
     } catch (error) {
@@ -80,10 +80,26 @@ const register = async (req, res) => {
 // Sends a welcome message for the login page in JSON format
 const login = async (req, res) => {
     try {
-        res.send("Welcome to the Login Page using Router.");
-        res.status(200).json({ message: "Welcome to the Login Page using Router." });
+        const { email, password } = req.body;
+
+        const userExists = await User.findOne({ email });
+
+        if(!userExists) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+        }
+
+        const isUser = await bcrypt.compare(password, userExists.password);
+
+        if(isUser) {
+            res.status(201).json({ message: `${ userExists.username } Logged in Successfully.`, token: await userExists.generateToken(), userId: userExists._id.toString() });
+        }
+        else {
+            res.status(401).json({ message: "Invalid Credentials!" });
+        }
+        
     } catch (error) {
         // Log any errors that occur during the execution of the login logic
+        res.status(500).json({ error: "Internal server error!" });
         console.log("Internal server error:", error);
     }
 };

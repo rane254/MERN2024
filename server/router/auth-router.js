@@ -28,7 +28,7 @@ router.route("/contact").get(authControllers.contact);
 router.route("/register").post(authControllers.register);
 
 // Login route
-router.route("/login").get(authControllers.login);
+router.route("/login").post(authControllers.login);
 
 // Export the router to make it available for use in other files
 module.exports = router;
