@@ -1,11 +1,17 @@
 // Controllers
+// These functions handle the application's logic for different routes.
+// They are responsible for processing incoming requests, interacting with models, and sending responses.
 
-// In an Express.js application, a "controller" refers to a part of your code that is responsible for handling the application's logic. Controllers are typically used to process incoming requests, interact with models (data sources), and send responses back to clients. They help organize your application by separating concerns and following the MVC (Model-View-Controller) design.
+// Import the User model
+const User = require('../models/user-model');
+
+const bcrypt = require('bcryptjs');
 
 // Home Logic
+// Sends a welcome message for the home page in JSON format
 const home = async (req, res) => {
     try {
-        // Send a welcome message for the home page in JSON format
+        res.send("Welcome to the MERN Home Page using Router.");
         res.status(200).json({ message: "Welcome to the MERN Home Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the home logic
@@ -14,9 +20,10 @@ const home = async (req, res) => {
 };
 
 // About Logic
+// Sends a welcome message for the about page in JSON format
 const about = async (req, res) => {
     try {
-        // Send a welcome message for the about page in JSON format
+        res.send("Welcome to the About Page using Router.");
         res.status(200).json({ message: "Welcome to the About Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the about logic
@@ -25,9 +32,10 @@ const about = async (req, res) => {
 };
 
 // Contact Logic
+// Sends a welcome message for the contact page in JSON format
 const contact = async (req, res) => {
     try {
-        // Send a welcome message for the contact page in JSON format
+        res.send("Welcome to the Contact Page using Router.");
         res.status(200).json({ message: "Welcome to the Contact Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the contact logic
@@ -36,21 +44,43 @@ const contact = async (req, res) => {
 };
 
 // Register Logic
+// Handles user registration:
+// 1. Get Registration Data: Retrieve user data (username, email, password).
+// 2. Check Email existence: Check if Email is already registered.
+// 3. Hash Password: Securely hash the password.
+// 4. Create User: Create a new User with hashed password.
+// 5. Save to DB: Save User data to the database.
+// 6. Respond: Respond with "Registration Successful" or handle errors.
 const register = async (req, res) => {
     try {
-        console.log(req.body);
-        // Log the request body and send a welcome message for the register page in JSON format
-        res.status(200).json({ message: req.body });
+        const { username, email, phone, password } = req.body;
+
+        // Check if the email already exists
+        const userExists = await User.findOne({ email: email });
+
+        if (userExists) {
+            return res.status(400).json({ message: "Email already exists!" });
+        }
+
+        // Create a new user and save to the database
+        const userRegistered = await User.create({ username, email, phone, password });
+
+        //In most cases, converting _id to a string is a good practice because it ensures Consistency and Compatibility across different JWT libraries and systems. It also aligns with the expectation that claims in a JWT are represented in strings.
+        res.status(201).json({ message: "User Registration Successfully.", token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
+        console.log({ userRegistered });
+
     } catch (error) {
         // Log any errors that occur during the execution of the register logic
+        res.status(500).json({ error: "Internal server error!" });
         console.log("Internal server error:", error);
     }
 };
 
 // Login Logic
+// Sends a welcome message for the login page in JSON format
 const login = async (req, res) => {
     try {
-        // Send a welcome message for the login page in JSON format
+        res.send("Welcome to the Login Page using Router.");
         res.status(200).json({ message: "Welcome to the Login Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the login logic
