@@ -54,6 +54,10 @@ userSchema.pre("save", async function () {
     }
 });
 
+userSchema.methods.comparePasswords = async function (password) {
+    return bcrypt.compare(password, this.password);
+};
+
 // JWT: JSON Web Tokens (JWT) is an open source (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
 
 // JWTs are often used for authentication and authorization in web applications.

@@ -88,7 +88,8 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
 
-        const isUser = await bcrypt.compare(password, userExists.password);
+        // const isUser = await bcrypt.compare(password, userExists.password);
+        const isUser = await userExists.comparePasswords(password);
 
         if(isUser) {
             res.status(201).json({ message: `${ userExists.username } Logged in Successfully.`, token: await userExists.generateToken(), userId: userExists._id.toString() });

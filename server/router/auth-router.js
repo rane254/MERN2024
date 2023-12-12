@@ -13,6 +13,10 @@ const authControllers = require('../controllers/auth-controller');
 // Create an instance of the Router class from express
 const router = express.Router();
 
+const registerSchema = require('../validators/auth-validator');
+
+const validate = require('../middlewares/validate-middleware');
+
 // Define routes for different paths, each using a specific controller function
 
 // Home route
@@ -25,7 +29,7 @@ router.route("/about").get(authControllers.about);
 router.route("/contact").get(authControllers.contact);
 
 // Register route
-router.route("/register").post(authControllers.register);
+router.route("/register").post(validate(registerSchema), authControllers.register);
 
 // Login route
 router.route("/login").post(authControllers.login);
