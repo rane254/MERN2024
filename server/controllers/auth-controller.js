@@ -11,7 +11,10 @@ const bcrypt = require('bcryptjs');
 // Sends a welcome message for the home page in JSON format
 const home = async (req, res) => {
     try {
+        // Send a simple welcome message as a response
         res.send("Welcome to the MERN Home Page using Router.");
+        
+        // Send a JSON response with a welcome message and a 200 status code
         res.status(200).json({ message: "Welcome to the MERN Home Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the home logic
@@ -23,7 +26,10 @@ const home = async (req, res) => {
 // Sends a welcome message for the about page in JSON format
 const about = async (req, res) => {
     try {
+        // Send a simple welcome message as a response
         res.send("Welcome to the About Page using Router.");
+        
+        // Send a JSON response with a welcome message and a 200 status code
         res.status(200).json({ message: "Welcome to the About Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the about logic
@@ -35,7 +41,10 @@ const about = async (req, res) => {
 // Sends a welcome message for the contact page in JSON format
 const contact = async (req, res) => {
     try {
+        // Send a simple welcome message as a response
         res.send("Welcome to the Contact Page using Router.");
+        
+        // Send a JSON response with a welcome message and a 200 status code
         res.status(200).json({ message: "Welcome to the Contact Page using Router." });
     } catch (error) {
         // Log any errors that occur during the execution of the contact logic
@@ -53,19 +62,21 @@ const contact = async (req, res) => {
 // 6. Respond: Respond with "Registration Successful" or handle errors.
 const register = async (req, res) => {
     try {
+        // Destructure registration data from the request body
         const { username, email, phone, password } = req.body;
 
         // Check if the email already exists
         const userExists = await User.findOne({ email: email });
 
         if (userExists) {
+            // If the email is already registered, send a 400 response with an error message
             return res.status(400).json({ message: "Email already exists!" });
         }
 
-        // Create a new user and save to the database
+        // Create a new user and save it to the database
         const userRegistered = await User.create({ username, email, phone, password });
 
-        //In most cases, converting _id to a string is a good practice because it ensures Consistency and Compatibility across different JWT libraries and systems. It also aligns with the expectation that claims in a JWT are represented in strings.
+        // Respond with a success message, a generated token, and the user's ID
         res.status(201).json({ message: `${ userRegistered.username } Registration Successfully.`, token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
         console.log({ userRegistered });
 
@@ -80,21 +91,26 @@ const register = async (req, res) => {
 // Sends a welcome message for the login page in JSON format
 const login = async (req, res) => {
     try {
+        // Destructure login data from the request body
         const { email, password } = req.body;
 
+        // Check if a user with the provided email exists
         const userExists = await User.findOne({ email });
 
         if(!userExists) {
+            // If the user does not exist, send a 400 response with an error message
             return res.status(400).json({ message: "Invalid Credentials" });
         }
 
-        // const isUser = await bcrypt.compare(password, userExists.password);
+        // Check if the provided password matches the hashed password in the database
         const isUser = await userExists.comparePasswords(password);
 
         if(isUser) {
+            // If the password is correct, respond with a success message, a generated token, and the user's ID
             res.status(201).json({ message: `${ userExists.username } Logged in Successfully.`, token: await userExists.generateToken(), userId: userExists._id.toString() });
         }
         else {
+            // If the password is incorrect, send a 401 response with an error message
             res.status(401).json({ message: "Invalid Credentials!" });
         }
         

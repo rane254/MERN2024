@@ -10,6 +10,7 @@ const app = express();
 // Import the router from the './router/auth-router' file
 const authRoute = require('./router/auth-router');
 
+// Import the router from the './router/contact-router' file
 const contactRoute = require('./router/contact-router');
 
 // Import the connectDB function from './utils/db'
