@@ -66,7 +66,7 @@ const register = async (req, res) => {
         const userRegistered = await User.create({ username, email, phone, password });
 
         //In most cases, converting _id to a string is a good practice because it ensures Consistency and Compatibility across different JWT libraries and systems. It also aligns with the expectation that claims in a JWT are represented in strings.
-        res.status(201).json({ message: `${ userExists.username } Registration Successfully.`, token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
+        res.status(201).json({ message: `${ userRegistered.username } Registration Successfully.`, token: await userRegistered.generateToken(), userId: userRegistered._id.toString() });
         console.log({ userRegistered });
 
     } catch (error) {

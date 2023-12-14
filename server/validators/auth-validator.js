@@ -11,6 +11,7 @@ const registerSchema = z.object({
     email: z
         .string({ required_error: "Email is required!" })
         .trim()
+        .email({ message: "Enter an valid email!" })
         .min(3, { message: "Email must be atleast 3 characters." })
         .max(255, { message: "Email must not be more that 255 characters!" }),
 
@@ -23,7 +24,7 @@ const registerSchema = z.object({
     password: z
         .string({ required_error: "Password is required!" })
         .trim()
-        .min(7, { message: "Password must be atleast 8 characters." })
+        .min(7, { message: "Password must be atleast 7 characters." })
         .max(16, { message: "Password must not be more that 16 characters!" })
 });
 
